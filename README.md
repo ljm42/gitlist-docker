@@ -1,9 +1,8 @@
 # gitlist-docker
 
-A ready to use docker image with preinstalled nginx and gitlist gitlist-1.0.1
+A ready to use docker image with preinstalled nginx and gitlist-1.0.1
 
-You can use it to quickly expose a web interface of the git repositories in a
-directory of your host machine.
+You can use it to quickly visualize the git repositories on your machine.
 
 ## Usage
 
@@ -13,20 +12,38 @@ You can build the image like this
     cd gitlist-docker
     docker build -t gitlist .
 
-And run it like this
+### Quickstart
 
-    docker run -p 8888:80 -v /path/repo:/repos gitlist
+```
+docker run -p <8888>:80 -v </path/to/repos>:/repos:ro gitlist
+```
 
-The web interface will be available on host machine at port 8888 and will show
-repositories inside /path/repo
+Use a web browser to access gitlist at the specified port and it will show the git repositories available in the specified path.
 
-You can optionally set these environment variables:
+### Full Options
 
-    TZ (timezone) example: 'America/Los_Angeles'
-    -e TZ='America/Los_Angeles'
+```
+docker run \
+  -p <8888>:80/tcp \
+  -e TZ='America/Los_Angeles' \
+  -e DATEFORMAT='m/d/Y h:i:s a' \
+  -e THEME='bootstrap3' \
+  -v </path/to/repos>:/repos:ro \
+  -v </path/to/repos2>:/repos2:ro \
+  -v </path/to/repos3>:/repos3:ro \
+  -v </path/to/repos4>:/repos4:ro \
+  -v </path/to/repos5>:/repos5:ro \
+  gitlist
+```
 
-    DATEFORMAT examples: 'd/m/Y H:i:s', 'm/d/Y H:i:s'
-    -e 'DATEFORMAT'='m/d/Y H:i:s'
+|            Parameter            | Function                                                                |
+| :-----------------------------: | ----------------------------------------------------------------------- |
+|  `-e TZ='America/Los_Angeles'`  | (Optional) Specify your timezone in a format recognized by PHP          |
+| `-e DATEFORMAT='m/d/Y h:i:s a'` | (Optional) Two common options are `'d/m/Y H:i:s'` and `'m/d/Y h:i:s a'` |
+|     `-e THEME='bootstrap3'`     | (Optional) Specify either `'default'` or `'bootstrap3'`                 |
 
-    THEME options: 'default' or 'bootstrap3'
-    -e 'THEME'='bootstrap3'
+#### Volumes
+
+You can specify up to five different directories that contain your git repositories. Note that you need to provide the directory that contains your repository, not the directory of the repository itself (so two levels up from the `.git` folder.)
+
+It is recommended that you include `:ro` to open the paths in readonly mode.
