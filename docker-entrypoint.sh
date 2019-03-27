@@ -3,6 +3,10 @@ cp /var/www/gitlist/config.ini-example /var/www/gitlist/config.ini
 # prepare config.ini for sed matching
 sed -i '/WINDOWS USERS/,+3d' /var/www/gitlist/config.ini 
 sed -i "s#repositories\[\] = '/home/git/repositories/'##g" /var/www/gitlist/config.ini
+
+# make a dummy repo
+mkdir -p /repos/sentinel; cd /repos/sentinel; git --bare init .
+
 # loop through /repos*, if they exist and contain a .git folder, add to list of repositories
 for REPODIR in /repos /repos2 /repos3 /repos4 /repos5; do
 if [ -d ${REPODIR} ] && [ "$(find ${REPODIR} -maxdepth 2 -type d | grep '^/.*/.*/.git$')" ]; then
