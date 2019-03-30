@@ -23,13 +23,22 @@ fi
 if [ "${TZ}" ]; then sed -i "s#; timezone = UTC#timezone = '${TZ}'#g" /var/www/gitlist/config.ini; fi
 if [ "${DATEFORMAT}" ]; then sed -i "s#; format = 'd/m/Y H:i:s'#format = '${DATEFORMAT}'#g" /var/www/gitlist/config.ini; fi
 if [ "${THEME}" ]; then sed -i "s#theme = \"default\"#theme = \"${THEME}\"#g" /var/www/gitlist/config.ini; fi
+
+if [ -d /repos/boot ]; then
+  PERM=`stat -c %a /repos/boot | cut -c3`
+  if [[ $PERM -ne 5 && $PERM -ne 7 ]]; then
+    # set php and nginx to run as root so can read the Unraid flash drive
+    sed -i 's/www-data/root/g' /etc/nginx.conf
+    sed -i 's/www-data/root/g' /etc/php5/fpm/pool.d/www.conf
+    sed -i 's#/etc/php5/fpm/php-fpm.conf#/etc/php5/fpm/php-fpm.conf --allow-to-run-as-root#g' /etc/init.d/php5-fpm
+  fi
+fi
+
 # display relevent config
+grep -E "^user" /etc/nginx.conf
 grep -E "(repositories\[\]|timezone|format|theme) =" /var/www/gitlist/config.ini
 
-# set php to run as root so it can read the Unraid flash drive
-sed -i 's/www-data/root/g' /etc/php5/fpm/pool.d/www.conf
-sed -i 's#/etc/php5/fpm/php-fpm.conf#/etc/php5/fpm/php-fpm.conf --allow-to-run-as-root#g' /etc/init.d/php5-fpm
-
 # start php and nginx
-service php5-fpm restart; nginx -c /etc/nginx.conf
+service php5-fpm restart
+nginx -c /etc/nginx.conf
 
