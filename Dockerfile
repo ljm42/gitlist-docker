@@ -9,6 +9,7 @@ RUN tar -zxvf /var/www/gitlist-1.0.1.tar.gz -C /var/www && \
 WORKDIR /var/www/gitlist/
 ADD nginx.conf /etc/
 ADD docker-entrypoint.sh /
+RUN chmod 755 /docker-entrypoint.sh
 EXPOSE 80
 VOLUME ["/repos", "/repos2", "/repos3", "/repos4", "/repos5"]
 ENTRYPOINT ["/docker-entrypoint.sh"]

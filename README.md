@@ -1,9 +1,10 @@
 # gitlist-docker
 
 A ready to use docker image with preinstalled nginx and gitlist-1.0.1
-Designed for Unraid - runs as root so it can access the flash drive
 
 You can use it to quickly visualize the git repositories on your machine.
+
+If any repositories are not world-readable, will configure GitList to run as root automatically. Otherwise runs as www-data.
 
 ## Usage
 
